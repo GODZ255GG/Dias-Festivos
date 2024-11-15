@@ -147,3 +147,50 @@ input[type=submit]:hover {
     }
 }
 
+/* Animación de carga */
+.sound-wave {
+    display: none; /* Por defecto, no se muestra */
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    width: 3.75rem;
+    height: 2.5rem;
+    margin: 20px auto;
+}
+
+.sound-wave div {
+    height: 2.5rem;
+    width: 0.6rem;
+    border-radius: 0.5rem;
+    background: var(--accent-color); /* Usa tu color de acento */
+    animation: audio-wave 4s infinite ease-in-out; /* Aumenta de 2.2s a 4s */
+}
+
+.sound-wave div:nth-child(2) { animation-delay: 0.2s; }
+.sound-wave div:nth-child(3) { animation-delay: 0.4s; }
+.sound-wave div:nth-child(4) { animation-delay: 0.6s; }
+.sound-wave div:nth-child(5) { animation-delay: 0.8s; }
+
+/* Animación de las barras */
+@keyframes audio-wave {
+    0% {
+        height: 6px;
+        transform: translateY(0px);
+        background: #ff8e3a; /* Color inicial */
+    }
+    25% {
+        height: 40px;
+        transform: translateY(-5px) scaleY(1.7);
+        background: #ed509e; /* Segundo color */
+    }
+    50% {
+        height: 6px;
+        transform: translateY(0px);
+        background: #9c73f8; /* Tercer color */
+    }
+    100% {
+        height: 6px;
+        transform: translateY(0px);
+        background: #0fccce; /* Cuarto color */
+    }
+}

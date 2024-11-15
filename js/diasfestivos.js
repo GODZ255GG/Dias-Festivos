@@ -5,47 +5,64 @@ var txt_anio;
 var cbx_pais;
 var cbx_mes;
 var div_resultados;
+var loadingElement;
 
 window.onload = function () {
     txt_anio = document.getElementById("txt_anio");
     cbx_pais = document.getElementById("cbx_pais");
     cbx_mes = document.getElementById("cbx_mes");
     div_resultados = document.getElementById("div_resultados");
-    txt_anio.value = (new Date().getFullYear() -1);
+    loadingElement = document.getElementById("loading"); // Referencia al indicador de carga
+    txt_anio.value = (new Date().getFullYear() - 1);
     div_resultados.style.display = "none";
+    loadingElement.style.display = "none"; // Ocultar la animación inicialmente
 }
 
-function consultar(){
-
-    //Oculta el div de resultados
+function consultar() {
+    const loadingElement = document.getElementById('loading');
     div_resultados.style.display = "none";
-    //Crea petición HTTP
+    loadingElement.style.display = "flex"; // Mostrar la animación
+
+    // Crea la petición HTTP
     var request = new XMLHttpRequest();
-    var URL_CONSULTA = API_URL_BASE+"holidays?"+ 
-        "language=es"+ 
-        "&key="+API_KEY+ 
-        "&country="+cbx_pais.value+ 
-        "&year="+txt_anio.value+ 
-        "&month="+cbx_mes.value;
+    var URL_CONSULTA = API_URL_BASE + "holidays?" + 
+        "language=es" + 
+        "&key=" + API_KEY + 
+        "&country=" + cbx_pais.value + 
+        "&year=" + txt_anio.value + 
+        "&month=" + cbx_mes.value;
     console.log(URL_CONSULTA);
+
     request.open('GET', URL_CONSULTA, true);
     request.onload = function() {
-    
         if (request.status >= 200 && request.status < 300) {
-        
             var data = JSON.parse(this.response);
             console.log(data);
-            mostrarDiasFestivos (data.holidays);
-        }else{
-            alert("Error al consultar la API");
+
+            // Mostrar resultados después de un retraso
+            setTimeout(() => {
+                loadingElement.style.display = "none"; // Ocultar animación
+                mostrarDiasFestivos(data.holidays);
+            }, 2000); // Retraso adicional de 2 segundos
+        } else {
+            setTimeout(() => {
+                loadingElement.style.display = "none"; // Ocultar animación en caso de error
+                alert("Error al consultar la API");
+            }, 2000);
         }
-    }
-    request.onerror = function() {
-        alert("Error al consultar la API");
     };
+
+    request.onerror = function() {
+        setTimeout(() => {
+            loadingElement.style.display = "none"; // Ocultar animación en caso de error
+            alert("Error al consultar la API");
+        }, 2000);
+    };
+
     request.send();
     return false;
 }
+
 
 function mostrarDiasFestivos(diasFestivos) {
     div_resultados.style.display = "block";
